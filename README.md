@@ -73,11 +73,11 @@ $$\frac{\partial E}{\partial X} = W^T \cdot \frac{\partial E}{\partial Y}$$
 
 Since we are using momentum based backward propagation, there is a 'velocity' term, which determines how quickly the network converges based on a 'momentum' factor. The velocity acts like an accumulated gradient, helping the network converge faster toward a 'deeper' minima, and avoiding oscillations by skipping over local minima. The gradient descent will look like this:
 
-$$v_t = \gamma v_{t-1} + \eta \nabla_\theta J(\theta)$$
+$$v_j = \gamma v_{j-1} + \eta \nabla_\theta J(\theta)$$
 
-$$\theta_{t+1} = \theta_t - v_t$$
+$$\theta_{j+1} = \theta_j - v_j$$
 
-Where $v_t$ is the velocity (or accumulated gradient) at time step $t$. $\gamma$ is the momentum coefficient (0.9 in our case), determining how much previous velocity is retained. $\eta$ is the learning rate. $$\nabla_\theta J(\theta)$$ is the gradient of the cost function w.r.t $$\theta$$, which is either the weights or biases
+Where $v_j$ is the velocity (or accumulated gradient) at iteration/epoch $j$. $\gamma$ is the momentum coefficient (0.9 in our case), determining how much previous velocity is retained. $\eta$ is the learning rate. $$\nabla_\theta J(\theta)$$ is the gradient of the cost function w.r.t $$\theta$$, which is either the weights or biases
 
 Since we are also using MiniBatch gradient descent, the weight and bias gradients are divided by the batch size (64 in our case). MiniBatch gradient descent calculates the gradients over a random batch of the training data instead of iterating through every single sample. The weights and biases are updated once per batch instead of sample, making training much faster and computationally efficient.
 
