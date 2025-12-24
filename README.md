@@ -85,7 +85,7 @@ In the case of convolutional neural networks, we have the same $Y = W \cdot X + 
 
 Instead of using nested for loops in combination with the convolve2d/correlate2d functions from the scipy library to convolve the filters and the input images, we use the im2col algorithm. This is much faster because it converts the convolution operation into a single matrix multiplication. It works by extracting the positions of the input image matrix that the filter would slide over and makes them columns of a matrix. That matrix is then multiplied with the flattened kernel. The result is a convolution. While it is computationally faster, it does use more memory than the alternative.
 
-Some max pooling layers are also used in our CNN architecture. They essentially perform dimensionality reduction on the input. They slide a 2x2 mask with a stride of 2 over the input and take the maximum value. This basically preserves the most significant/important features in the image and discards the rest, helping the network generalise better. Since we are using a 2x2 mask with stride = 2, it halves the size.
+Some max pooling layers are also used in our CNN architecture. They essentially perform dimensionality reduction on the input. They slide a 2x2 mask with a stride of 2 over the input and take the maximum value. This basically preserves the most significant/important features in the image and discards the rest, helping the network generalise better. Since we are using a 2x2 mask with stride = 2, it halves the size, improving speed.
 
 The output of the convolutional layers must be reshaped before it goes into the dense layers, hence there is a reshape class implemented.
 
