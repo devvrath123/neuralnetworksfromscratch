@@ -5,7 +5,7 @@ A few custom built neural networks
 
 - The CNN uses a library called '**cupy**' instead of numpy. It is a drop-in replacement for numpy so that GPU compute (**dedicated** Nvidia or AMD GPUs only) can be used for numpy operations. More information can be found at [cupy.dev](cupy.dev).
 - The CNN also uses the pickle library to save the model parameters after training so that it can be reused later, since training CNNs take a while, even with GPUs. There is also [already a .pkl model](https://github.com/devvrath123/neuralnetworksfromscratch/blob/main/CNNs/Fashion-MNIST/fashion-mnist-cnn.pkl) provided in the repository.
-- If you want to try out the convolutional neural network on your own, you can check out this [Kaggle notebook](https://www.kaggle.com/code/devvrath123/fashion-mnist-cnn). Use a GPU as the accelerator in Kaggle before you run the notebook, otherwise the code will not execute correctly.
+- If you want to try out the convolutional neural network on your own, you can check out this [Kaggle notebook](https://www.kaggle.com/code/devvrath123/cnn-fashion-mnist). Use a GPU as the accelerator in Kaggle before you run the notebook, otherwise the code will not execute correctly.
 - The CNN uses an algorithm called **im2col** (image to column) instead of the convolve2d/correlate2d functions provided by scipy to vastly speed up convolution operations. More information below
 - Stochastic gradient descent variants for the multi-layer perceptrons are also there, but they are slow to train.
 - All neural networks use the leaky ReLU function as the activation function, the categorical cross entropy cost function and the SoftMax function for the output layer (because of multi-class classification).
