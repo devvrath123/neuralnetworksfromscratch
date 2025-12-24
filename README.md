@@ -132,7 +132,7 @@ As visible, multi-layer perceptrons perform very well on the MNIST dataset, but 
 
 ## Confusion Matrices on the test sets
 
-The percentages in the diagonals can be averaged to find the final test accuracy
+The percentages in the diagonal can be averaged to find the final test accuracy
 
 For MNIST:
 - MiniBatch Gradient Descent
