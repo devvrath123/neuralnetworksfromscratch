@@ -118,7 +118,7 @@ On the Fashion MNIST dataset:
 - MiniBatch Gradient Descent + Dropout + L2 regularisation: 95.6% training accuracy, 90.18% test accuracy
 - Convolutional Neural Network: 97.92% training accuracy, 94.17% test accuracy
 
-As visible, multi-layer perceptrons perform very well on the MNIST dataset, but struggle with the Fashion-MNIST dataset. There is a slight improvement with the addition of dropout, but performance is still poor. This is because the images have more complex features, and sometimes the same shape (ex: Shirt and Pullover), making it difficult for MLPs to differentiate between them. The network ends up overfitting instead. Convolutional layers are needed to differentiate complex images better, and as shown above, the CNN far outperforms the MLPs, with a much smaller overfitting gap. Performance is greatly improved by Dropout and Max Pooling layers. A more complex and scaled up CNN architecture can be used to get even better results.
+As visible, multi-layer perceptrons perform very well on the MNIST dataset, but struggle with the Fashion-MNIST dataset. There is a slight improvement with the addition of dropout and L2 regularisation, but performance is still poor. This is because the images have more complex features, and sometimes the items have the same shape (ex: Shirt and Pullover), making it difficult for MLPs to differentiate between them. The network ends up overfitting instead. Convolutional layers are needed to differentiate complex images better, and as shown above, the CNN far outperforms the MLPs, with a much smaller overfitting gap. Performance is greatly improved by Dropout and Max Pooling layers. A more complex and scaled up CNN architecture can be used to get even better results.
 
 ## Confusion Matrices
 
