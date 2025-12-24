@@ -59,6 +59,8 @@ For the backward pass, we calculate the error at the output using the categorica
 
 $$\frac{\partial E}{\partial y_i} = \hat{y}_i - y_i$$
 
+Where $\hat{y}$ is the predicted value and $y_i$ is the true value.
+
 Weights gradient:
 
 $$\frac{\partial E}{\partial W} = \frac{\partial E}{\partial Y} \cdot X$$
@@ -96,6 +98,8 @@ Some max pooling layers are also used in our CNN architecture. They essentially 
 The output of the convolutional layers must be reshaped before it goes into the dense layers, hence there is a reshape class implemented.
 
 For the backward pass ($*$ represents convolution):
+
+The output gradient is the same as given above, since we are using the SoftMax output layer.
 
 Weights/filters gradient:
 
