@@ -83,7 +83,7 @@ Since we are also using MiniBatch gradient descent, the weight and bias gradient
 
 The variants with dropout also use learning rate decay as another optimizer to help the network converge better. Decay is calculated using a decay factor:
 
-$$\eta_j = \frac {\eta}{(1 + d \cdot j)}
+$$\eta_j = \frac {\eta}{(1 + d \cdot j)}$$
 
 Where $j$ represents the current iteration/epoch. $\eta_j$ is the learning rate in the current iteration/epoch, while $\eta$ is the starting learning rate. $d$ is the decay factor.
 
