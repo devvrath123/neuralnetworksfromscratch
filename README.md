@@ -38,7 +38,7 @@ The variants with dropout use a dropout layer with 20% drop between the 1st and 
 
 ## Working explanation
 
-The multi-layer perceptrons use fully connected dense layers, ie every neuron in a layer is connected to every neuron in the previous/next layers. The connection between each neuron is represented by a 'weight', and each neuron is biased. The output layer is a SoftMax layer because this is a multinomial classification problem and the final probabilities need to sum up to 1. The output of a layer is the input of the next layer.
+The multi-layer perceptrons use fully connected dense layers, ie every neuron in a layer is connected to every neuron in the previous/next layers. The connection between each neuron is represented by a 'weight', and each neuron is also 'biased'. The output layer is a SoftMax layer because this is a multinomial classification problem and the final probabilities need to sum up to 1. The output of a layer is the input of the next layer.
 
 Dropout layers turn off a random percentage of the neuron connections between 2 layers, only during training. This helps the network generalise, not memorise.
 
@@ -55,7 +55,7 @@ x & \text{if } x > 0 \\
 \end{cases}
 $$
 
-For the backward pass, we calculate the error at the output using the categorical cross entropy cost function and perform gradient descent. Gradients are also calculated for the input, the weights and the biases and updated accordingly. Since we are using a SoftMax output layer coupled with the CCE cost function, the output gradient simplifies to:
+For the backward pass, we calculate the error at the output using the categorical cross entropy cost function and perform gradient descent. We are using MiniBatch gradient descent. Gradients are also calculated for the input, the weights and the biases and updated accordingly. Since we are using a SoftMax output layer coupled with the CCE cost function, the output gradient simplifies to:
 
 $$\frac{\partial E}{\partial y_i} = \hat{y}_i - y_i$$
 
@@ -77,13 +77,19 @@ $$v_t = \gamma v_{t-1} + \eta \nabla_\theta J(\theta)$$
 
 $$\theta_{t+1} = \theta_t - v_t$$
 
-Where $v_t$ is the velocity (or accumulated gradient) at time step $t$. $\gamma$ is the momentum coefficient, determining how much previous velocity is retained. $\eta$ is the learning rate. $$\nabla_\theta J(\theta)$$ is the gradient of the cost function w.r.t $$\theta$$, which is either the weights or biases
+Where $v_t$ is the velocity (or accumulated gradient) at time step $t$. $\gamma$ is the momentum coefficient (0.9 in our case), determining how much previous velocity is retained. $\eta$ is the learning rate. $$\nabla_\theta J(\theta)$$ is the gradient of the cost function w.r.t $$\theta$$, which is either the weights or biases
 
-Since we are also using MiniBatch gradient descent, the weight and bias gradients are divided by the batch size. MiniBatch gradient descent calculates the gradients over a random batch of the data instead of iterating through every single sample in the training data. The weights and biases are updated once per batch instead of sample, making training much faster and computationally efficient.
+Since we are also using MiniBatch gradient descent, the weight and bias gradients are divided by the batch size (64 in our case). MiniBatch gradient descent calculates the gradients over a random batch of the training data instead of iterating through every single sample. The weights and biases are updated once per batch instead of sample, making training much faster and computationally efficient.
 
-In the case of convolutional neural networks, we have the same $Y = W \cdot X + b$ forward pass, but instead of a weights matrix it is a matrix of kernels/filters, depending on how many filters are used, so essentially a matrix of matrices. The connection between each neuron in the convolutional layers is represented instead by a convolution with a kernel, rather than a dot product with a weight (as seen with MLPs). $X$ is the matrix of input images with the shape (batch size, channel, height, width). The channel is just 1 in our case because the data is made up of grayscale images. The output shape changes after every convolution layer. Height of the result is given by: $H_{out} = H_{in} - K + 1$, where K is the kernel size. The same formula applies for the width, where we simply substitute width in place of height.
+The variants with dropout also use learning rate decay as another optimizer to help the network converge better. Decay is calculated using a decay factor:
 
-Instead of using nested for loops in combination with the convolve2d/correlate2d functions from the scipy library to convolve the filters and the input images, we use the im2col algorithm. This is much faster because it converts the convolution operation into a single matrix multiplication. It works by extracting the positions of the input image matrix that the filter would slide over and makes them columns of a matrix. That matrix is then multiplied with the flattened kernel. The result is a convolution. While it is computationally faster, it does use more memory than the alternative.
+$$\eta_j = \frac {\eta_{j-1}}{(1 + d \cdot j)}
+
+Where $j$ represents the current iteration/epoch. $\eta$ is the learning rate and $d$ is the decay factor.
+
+In the case of convolutional neural networks, we have the same $Y = W \cdot X + b$ forward pass, but instead of a weights matrix it is a matrix of kernels/filters, depending on how many filters are used, so essentially a matrix of matrices. The connection between each neuron in the convolutional layers is represented instead by a convolution with a kernel, rather than a dot product with a weight (as seen with MLPs). Each neuron here is also 'biased'. $X$ is the matrix of input images with the shape (batch size, channel, height, width). The channel is just 1 in our case because the data is made up of grayscale images. The output shape changes after every convolution layer. Height of the result is given by: $H_{out} = H_{in} - K + 1$, where K is the kernel size. The same formula applies for the width, where we simply substitute width in place of height. This formula only works with zero padding and stride = 1.
+
+Instead of using nested for loops in combination with the convolve2d/correlate2d functions from the scipy library to convolve the filters and the input images during the forward pass, we use the im2col algorithm. This is much faster because it converts the convolution operation into a single matrix multiplication. It works by extracting the positions of the input image matrix that the filter would slide over and makes them columns of a matrix. That matrix is then multiplied with the flattened kernel. The result is a convolution. While it is computationally faster, it does use more memory than the alternative.
 
 Some max pooling layers are also used in our CNN architecture. They essentially perform dimensionality reduction on the input. They slide a 2x2 mask with a stride of 2 over the input and take the maximum value. This basically preserves the most significant/important features in the image and discards the rest, helping the network generalise better. Since we are using a 2x2 mask with stride = 2, it halves the size, improving speed.
 
@@ -103,7 +109,11 @@ Input gradient:
 
 $$\frac{\partial E}{\partial X} = \frac{\partial E}{\partial Y} * W_{rot180}$$
 
-For the equations of the momentum gradient descent, the same generalisation given above applies here as well. For the backward propagation, we use the col2im algorithm, which is the im2col algorithm reversed. It takes the gradients calculated for the flattened columns and puts them together back into the shape of the original image. In the forward pass there is an overlap between the pixel values when we convolve with the kernel (because stride = 1), therefore in the backward pass the col2im algorithm takes the gradients corresponding to those overlapping pixels and sums them to find the total gradient for that pixel. Where there is no overlap, its simply the individual gradient for that pixel. A matrix of the original image shape is reconstructed this way, with each value corresponding to the gradient for every pixel. The backward pass through the dense layers works as with MLPs.
+For the equations of the momentum gradient descent, the same generalisation given above applies here as well. Learning rate decay is also used here (same as above). 
+
+For the backward propagation in the convolutional layers, we use the col2im algorithm, which is the im2col algorithm reversed. It takes the gradients calculated for the flattened columns and puts them together back into the shape of the original image. In the forward pass there is an overlap between the pixel values when we convolve with the kernel (because stride = 1), therefore in the backward pass the col2im algorithm takes the gradients corresponding to those overlapping pixels and sums them to find the total gradient for that pixel. Where there is no overlap, its simply the individual gradient for that pixel.
+
+A matrix of the original image shape is reconstructed this way, with each value corresponding to the gradient for every pixel. The backward pass through the dense layers works as with the MLPs (with momentum as well, explained above).
 
 ## Neural Network Performance
 
