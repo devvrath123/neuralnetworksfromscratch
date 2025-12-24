@@ -83,9 +83,9 @@ Since we are also using MiniBatch gradient descent, the weight and bias gradient
 
 The variants with dropout also use learning rate decay as another optimizer to help the network converge better. Decay is calculated using a decay factor:
 
-$$\eta_j = \frac {\eta_{j-1}}{(1 + d \cdot j)}
+$$\eta_j = \frac {\eta}{(1 + d \cdot j)}
 
-Where $j$ represents the current iteration/epoch. $\eta$ is the learning rate and $d$ is the decay factor.
+Where $j$ represents the current iteration/epoch. $\eta_j$ is the learning rate in the current iteration/epoch, while $\eta$ is the starting learning rate. $d$ is the decay factor.
 
 In the case of convolutional neural networks, we have the same $Y = W \cdot X + b$ forward pass, but instead of a weights matrix it is a matrix of kernels/filters, depending on how many filters are used, so essentially a matrix of matrices. The connection between each neuron in the convolutional layers is represented instead by a convolution with a kernel, rather than a dot product with a weight (as seen with MLPs). Each neuron here is also 'biased'. $X$ is the matrix of input images with the shape (batch size, channel, height, width). The channel is just 1 in our case because the data is made up of grayscale images. The output shape changes after every convolution layer. Height of the result is given by: $H_{out} = H_{in} - K + 1$, where K is the kernel size. The same formula applies for the width, where we simply substitute width in place of height. This formula only works with zero padding and stride = 1.
 
