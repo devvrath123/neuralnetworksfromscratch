@@ -95,9 +95,9 @@ Some max pooling layers are also used in our CNN architecture. They essentially 
 
 The output of the convolutional layers must be reshaped before it goes into the dense layers, hence there is a reshape class implemented.
 
-For the backward pass:
+For the backward pass ($*$ represents convolution):
 
-Weights gradient:
+Weights/filters gradient:
 
 $$\frac{\partial E}{\partial W} = X * \frac{\partial E}{\partial Y}$$
 
@@ -109,7 +109,7 @@ Input gradient:
 
 $$\frac{\partial E}{\partial X} = \frac{\partial E}{\partial Y} * W_{rot180}$$
 
-For the equations of the momentum gradient descent, the same generalisation given above applies here as well. Learning rate decay is also used here (same as above). 
+For the equations of the momentum gradient descent, the same generalisation given above applies here as well. Learning rate decay is also used here (same formula as above). 
 
 For the backward propagation in the convolutional layers, we use the col2im algorithm, which is the im2col algorithm reversed. It takes the gradients calculated for the flattened columns and puts them together back into the shape of the original image. In the forward pass there is an overlap between the pixel values when we convolve with the kernel (because stride = 1), therefore in the backward pass the col2im algorithm takes the gradients corresponding to those overlapping pixels and sums them to find the total gradient for that pixel. Where there is no overlap, its simply the individual gradient for that pixel.
 
