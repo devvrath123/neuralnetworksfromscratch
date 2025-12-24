@@ -99,7 +99,7 @@ For the backward pass:
 
 Weights gradient:
 
-$$\frac{\partial E}{\partial W} = X * \frac{\partial L}{\partial Y}$$
+$$\frac{\partial E}{\partial W} = X * \frac{\partial E}{\partial Y}$$
 
 Bias gradient:
 
