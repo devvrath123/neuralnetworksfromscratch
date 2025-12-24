@@ -130,7 +130,9 @@ On the Fashion MNIST dataset:
 
 As visible, multi-layer perceptrons perform very well on the MNIST dataset, but struggle with the Fashion-MNIST dataset. There is a slight improvement with the addition of dropout and L2 regularisation, but performance is still poor. This is because the images have more complex features, and sometimes the items have the same shape (ex: Shirt and Pullover), making it difficult for MLPs to differentiate between them. The network ends up overfitting instead. Convolutional layers are needed to differentiate complex images better, and as shown above, the CNN far outperforms the MLPs, with a much smaller overfitting gap. Performance is greatly improved by Dropout and Max Pooling layers. A more complex and scaled up CNN architecture can be used to get even better results.
 
-## Confusion Matrices
+## Confusion Matrices on the test sets
+
+The percentages in the diagonals can be averaged to find the final test accuracy
 
 For MNIST:
 - MiniBatch Gradient Descent
